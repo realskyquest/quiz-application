@@ -1,3 +1,3 @@
-# Svelte + Vite
+# Quiz Application v1
 
-This is a testing ground for svelte
+Try it out at here https://realskyquest.github.io/quiz-application
