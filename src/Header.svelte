@@ -1,5 +1,4 @@
-<header>
-  <div class="w3-container w3-center w3-margin-bottom w3-dark-gray">
-    <h2 class="animate__animated animate__zoomIn">Quiz Application v1</h2>
-  </div>
+<header class="p-5 text-light text-center" style="background-color: #4b5bab;">
+  <h1 class="h1">Quiz Application</h1>
+  <i class="small">Over 1000 questions!</i>
 </header>

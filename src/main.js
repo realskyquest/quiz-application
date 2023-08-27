@@ -1,5 +1,3 @@
-import "./css/w3.css";
-import "./css/animate.css";
 import App from "./App.svelte";
 
 const app = new App({

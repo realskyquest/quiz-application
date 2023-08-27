@@ -1,18 +1,14 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import Results from "./Results.svelte";
+  const dispatch = createEventDispatcher();
 
-  let dispatch = createEventDispatcher();
-  export let questionsArray = [];
+  import { Sound } from "svelte-sound";
+  import click_mp3 from "/mouseclick.mp3";
+  const click_sound = new Sound(click_mp3);
 
-  let correctQuestions = 0;
-  let wrongQuestions = 0;
-  let currentQuestion = 0;
+  export let question;
+  let answers = [question.correct_answer, ...question.incorrect_answers];
 
-  let answerCorrect = null;
-  let correctArray = [];
-
-  // Shuffles the answers
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
@@ -21,118 +17,47 @@
     return array;
   }
 
-  // Gets the answers
-  function getAnswers(question) {
-    let answersArray = [question.correct_answer, ...question.incorrect_answers];
-
-    answersArray = shuffleArray(answersArray);
-    return answersArray;
-  }
-
-  // Checks if answer is correct
-  function checkAnswer(value) {
-    correctArray.push(questionsArray[currentQuestion].correct_answer);
-
-    if (value == questionsArray[currentQuestion].correct_answer) {
-      currentQuestion += 1;
-      correctQuestions += 1;
-      answerCorrect = true;
-    } else {
-      currentQuestion += 1;
-      wrongQuestions += 1;
-      answerCorrect = false;
+  function decodeHTMLEntities(str) {
+    var element = document.createElement("div");
+    if (str && typeof str === "string") {
+      element.innerHTML = str;
+      str = element.textContent;
+      element.textContent = "";
     }
-    setTimeout(() => {
-      answerCorrect = null;
-    }, 100);
+    element.remove();
+    return str;
   }
 
-  let answers;
-  let progressBarStyle = "width: 1%; transition: width 0.5s ease;";
-
-  $: progressBarStyle = `width: ${
-    (currentQuestion / questionsArray.length) * 100
-  }%; transition: width 0.5s ease;`;
-
-  $: {
-    if (currentQuestion < questionsArray.length)
-      answers = getAnswers(questionsArray[currentQuestion]);
+  function checkAnswer(value) {
+    if (value == question.correct_answer) {
+      dispatch("return", true);
+    } else {
+      dispatch("return", false);
+    }
   }
+
+  answers = shuffleArray(answers);
 </script>
 
-{#if currentQuestion !== questionsArray.length}
-  <div
-    class="w3-panel w3-center w3-leftbar w3-rightbar w3-pale-blue w3-border-blue"
+<div class="container text-center">
+  <h4
+    class="h4 text-dark text-opacity-75 mt-2 animate__animated animate__slideInLeft"
   >
-    <p>{currentQuestion}/{questionsArray.length}</p>
-    <div
-      class="w3-container w3-margin-bottom w3-round w3-blue"
-      style={progressBarStyle}
-    >
-      <br />
-    </div>
-  </div>
-{/if}
+    {decodeHTMLEntities(question.question)}
+  </h4>
 
-<div class="w3-panel w3-dark-grey">
-  {#if answerCorrect === null}
-    {#if currentQuestion === questionsArray.length}<!-- All answers answered -->
-      <Results
-        lastQuizResultStats={`Correct questions: ${correctQuestions}, Wrong questions: ${wrongQuestions}`}
-        lastQuizResultList={correctArray}
-      />
+  <div class="row">
+    {#each answers as answer}
       <button
         on:click={() => {
-          let returnList = [
-            `Correct questions: ${correctQuestions}, Wrong questions: ${wrongQuestions}`,
-            correctArray,
-            correctQuestions,
-            wrongQuestions,
-          ];
-          dispatch("return", returnList);
+          click_sound.play();
+          checkAnswer(answer);
         }}
-        class="w3-button w3-block w3-card w3-grey w3-margin-bottom"
-        >Return</button
+        class="btn h6 mt-2 p-2 animate__animated animate__fadeIn"
+        style="background-color: #c2c2d1;"
       >
-    {:else}<!-- Answer the questions -->
-      <div
-        class="animate__animated animate__slideInLeft w3-panel w3-card-4 w3-blue"
-      >
-        <p>
-          Question: {questionsArray[currentQuestion].question}
-        </p>
-      </div>
-      <div class="w3-panel">
-        {#each answers as answer}
-          <button
-            on:click={() => {
-              checkAnswer(answer);
-            }}
-            class="animate__animated animate__fadeInLeft w3-button w3-block w3-card w3-grey"
-            >{answer}</button
-          ><br />
-        {/each}
-      </div>
-    {/if}
-  {:else if answerCorrect === true}<!-- Answer is correct -->
-    <div class="w3-panel w3-card-4 w3-blue">
-      <p>
-        Question: {questionsArray[currentQuestion - 1].question}
-      </p>
-      <h3>The correct answer is {correctArray[correctArray.length - 1]}</h3>
-    </div>
-    <div class="w3-panel w3-leftbar w3-border-green w3-pale-green w3-center">
-      <h1 class="w3-margin animate__animated animate__rubberBand">Correct</h1>
-    </div>
-  {:else if answerCorrect === false}<!-- Answer is wrong -->
-    <div class="w3-panel w3-card-4 w3-blue">
-      <p>
-        Question: {questionsArray[currentQuestion - 1].question}
-      </p>
-      <h3>The correct answer is {correctArray[correctArray.length - 1]}</h3>
-    </div>
-    <div class="w3-panel w3-leftbar w3-border-red w3-pale-red w3-center">
-      <h1 class="w3-margin animate__animated animate__rubberBand">Wrong</h1>
-    </div>
-  {/if}
+        {decodeHTMLEntities(answer)}
+      </button>
+    {/each}
+  </div>
 </div>
