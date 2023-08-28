@@ -4,12 +4,7 @@
 
   import { Sound } from "svelte-sound";
   import click_mp3 from "/mouseclick.mp3";
-
-  let click_sound;
-
-  function LoadSounds() {
-    click_sound = new Sound(click_mp3);
-  }
+  const  click_sound = new Sound(click_mp3);
 
   import Handler from "./Handler.svelte";
 
@@ -100,7 +95,6 @@
             type="button"
             class="btn text-dark btn-lg animate__animated animate__pulse"
             style="background-color: #4da6ff;"
-            on:pointerdown|preventDefault={LoadSounds}
             on:click={() => {
               click_sound.play();
               quizType = "Classic";
