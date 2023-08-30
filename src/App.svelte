@@ -13,7 +13,7 @@
   <Header />
 
   <!-- Firebase, for account handling -->
-  <!-- <Firebase
+  <Firebase
     cloudData={previousQuizResults}
     hidePanel={quizIsStarted}
     on:returnData={(event) => {
@@ -21,7 +21,7 @@
         previousQuizResults = event.detail;
       }
     }}
-  /> -->
+  />
 
   <!-- The content which is the main part of the app -->
   <Content
