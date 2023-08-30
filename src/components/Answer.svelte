@@ -2,13 +2,16 @@
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
 
+  // Sounds here
   import { Sound } from "svelte-sound";
   import click_mp3 from "/mouseclick.mp3";
   const click_sound = new Sound(click_mp3);
 
+  // The current question and a array of answers
   export let question;
   let answers = [question.correct_answer, ...question.incorrect_answers];
 
+  // Mr shuffler
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
@@ -17,6 +20,7 @@
     return array;
   }
 
+  // HAndler of words
   function decodeHTMLEntities(str) {
     var element = document.createElement("div");
     if (str && typeof str === "string") {
@@ -28,6 +32,7 @@
     return str;
   }
 
+  // Checker of answers
   function checkAnswer(value) {
     if (value == question.correct_answer) {
       dispatch("return", true);
@@ -36,6 +41,7 @@
     }
   }
 
+  // SHufflE...
   answers = shuffleArray(answers);
 </script>
 

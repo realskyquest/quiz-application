@@ -4,6 +4,7 @@
   import Footer from "./Footer.svelte";
   import Firebase from "./Firebase.svelte";
 
+  // [1] Whether the quiz started or not, [2] The previous results of the quiz
   let quizIsStarted = false;
   let previousQuizResults = [0, 0];
 </script>
@@ -11,7 +12,8 @@
 <main>
   <Header />
 
-  <Firebase
+  <!-- Firebase, for account handling -->
+  <!-- <Firebase
     cloudData={previousQuizResults}
     hidePanel={quizIsStarted}
     on:returnData={(event) => {
@@ -19,8 +21,9 @@
         previousQuizResults = event.detail;
       }
     }}
-  />
+  /> -->
 
+  <!-- The content which is the main part of the app -->
   <Content
     on:quizResults={(event) => {
       previousQuizResults = event.detail;

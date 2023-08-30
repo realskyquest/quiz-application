@@ -2,19 +2,26 @@
   import { createEventDispatcher, afterUpdate } from "svelte";
   let dispatch = createEventDispatcher();
 
+  // Sounds here
   import { Sound } from "svelte-sound";
   import click_mp3 from "/mouseclick.mp3";
-  const  click_sound = new Sound(click_mp3);
+  const click_sound = new Sound(click_mp3);
 
   import Handler from "./Handler.svelte";
 
-  // [1] The type of quiz choosen, [2] Whether the quiz started, [3] The results of the previous quiz stored in a array
+  /* 
+  [1] The type of quiz choosen, 
+  [2] Whether the quiz started, 
+  [3] The results of the previous quiz stored in a array
+  */
   let quizType = "";
   let quizStarted = false;
   export let previousQuizResults = [0, 0];
 
+  // Simple fade animation, when a mode is chosen
   let quizStartedAnimation = false;
 
+  // Shows the options panel after 0.5 seconds
   afterUpdate(() => {
     if (quizStarted == true) {
       setTimeout(() => {
@@ -27,6 +34,7 @@
 
 {#if quizStarted === true}
   {#if quizStartedAnimation == false}
+    <!-- inactive copy of modes panel for the fading animation -->
     <div class="container mt-5 animate__animated animate__fadeOut">
       <div class="row">
         <div class="col">
@@ -39,8 +47,7 @@
             <button
               type="button"
               class="btn btn-lg"
-              style="background-color: #ffe478;"
-              disabled>Time Countdown</button
+              style="background-color: #ffe478;">Time Countdown</button
             >
             <button
               type="button"
@@ -68,6 +75,7 @@
         </div>
       </div>
     </div>
+    <!-- END -->
   {:else}
     <!-- Handler -->
     <div class="animate__animated animate__fadeIn animate__delay-1s">
@@ -85,8 +93,10 @@
         {quizType}
       />
     </div>
+    <!-- END -->
   {/if}
 {:else}
+  <!-- Modes panel -->
   <div class="container mt-5">
     <div class="row">
       <div class="col">
@@ -103,9 +113,8 @@
           >
           <button
             type="button"
-            class="btn text-dark btn-lg"
+            class="btn text-dark btn-lg animate__animated animate__pulse animate__delay-1s"
             style="background-color: #ffe478;"
-            disabled
             on:click={() => {
               quizType = "Time Countdown";
               quizStarted = true;
@@ -141,4 +150,5 @@
       </div>
     </div>
   </div>
+  <!-- END -->
 {/if}

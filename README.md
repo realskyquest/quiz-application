@@ -1,4 +1,4 @@
-# Quiz Application v2 first part
+# Quiz Application v2 second part (time countdown released)
 
 Try it out at here https://realskyquest.github.io/quiz-application
 
