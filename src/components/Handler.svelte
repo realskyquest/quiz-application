@@ -46,6 +46,7 @@
   let selectedDifficulty = "Easy";
   let selectedQuestionAmount = 5;
   let selectedCountDownSeconds = 3;
+  let selectedTimeupMinutes = 1;
 
   // Checks If the quiz is finished and plays a sound, sends back the results
   afterUpdate(() => {
@@ -76,6 +77,9 @@
       const data = await response.json();
       if (response.ok) {
         quizDataLoading = false;
+        if (quizType == "Rush Attack") {
+          RA();
+        }
         return data.results;
       } else {
         throw new Error("Network response was not ok");
@@ -95,14 +99,16 @@
     );
     state = "started";
     TC_timeLeft = selectedCountDownSeconds;
+    RA_timeLeft = selectedTimeupMinutes;
     quizData = await getQuizData();
   }
 
+  // ---------- Time Countdown ---------- \\
   // Some variables for Time Countdown
   let TC_timeLeft = selectedCountDownSeconds;
   let TC_timeup = false;
 
-  // The algorithm that handles the timeout.
+  // The algorithm that handles the timeout for Time Countdown.
   if (quizType === "Time Countdown") {
     setInterval(() => {
       if (
@@ -132,6 +138,35 @@
         }
       }
     }, 1000);
+  }
+  // ---------- Rush Attack ---------- \\
+  let RA_timeLeft = selectedTimeupMinutes;
+  let RA_counterSeconds = 0;
+  let RA_counterMinutes = 0;
+
+  function RA() {
+    if (quizType == "Rush Attack") {
+      if (state == "started" && quizDataLoading == false) {
+        // Time increase
+        setInterval(() => {
+          if (questionIndex == quizData.length) {
+            return;
+          }
+          if (RA_counterMinutes < RA_timeLeft) {
+            RA_counterSeconds = RA_counterSeconds + 1;
+          }
+          if (RA_counterSeconds >= 60) {
+            RA_counterSeconds = 0;
+            RA_counterMinutes = RA_counterMinutes + 1;
+          }
+        }, 1000);
+        // Time Out
+        setTimeout(() => {
+          questionIndex = quizData.length;
+          answerWrong = quizData.length - answerCorrect;
+        }, RA_timeLeft * 60000);
+      }
+    }
   }
 </script>
 
@@ -197,6 +232,19 @@
             selectedCountDownSeconds = event.detail;
           }}
         />
+      {:else if quizType === "Rush Attack"}
+        <p class="text-dark text-opacity-75 h6 mt-2">
+          Time limit for quiz (Minutes)
+        </p>
+        <Form
+          values={[
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+            20,
+          ]}
+          on:return={(event) => {
+            selectedTimeupMinutes = event.detail;
+          }}
+        />
       {/if}
       <button class="btn text-bg-success mt-2">Submit </button>
     </form>
@@ -251,6 +299,12 @@
       {#if quizType === "Time Countdown"}
         <div class="text-center">
           <p class="mt-2 h5">{TC_timeLeft} seconds left</p>
+        </div>
+      {:else if quizType === "Rush Attack"}
+        <div class="text-center">
+          <p class="mt-2 h5">
+            {RA_counterMinutes} Minutes, {RA_counterSeconds} Seconds
+          </p>
         </div>
       {/if}
     </div>

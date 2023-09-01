@@ -1,4 +1,4 @@
-# Quiz Application v2 second part (time countdown released)
+# Quiz Application v2 third part (rush attack released)
 
 Try it out at here https://realskyquest.github.io/quiz-application
 

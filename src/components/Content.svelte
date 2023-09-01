@@ -116,16 +116,17 @@
             class="btn text-dark btn-lg animate__animated animate__pulse animate__delay-1s"
             style="background-color: #ffe478;"
             on:click={() => {
+              click_sound.play();
               quizType = "Time Countdown";
               quizStarted = true;
             }}>Time Countdown</button
           >
           <button
             type="button"
-            class="btn text-dark btn-lg"
+            class="btn text-dark btn-lg animate__animated animate__pulse animate__delay-2s"
             style="background-color: #eb564b;"
-            disabled
             on:click={() => {
+              click_sound.play();
               quizType = "Rush Attack";
               quizStarted = true;
             }}>Rush Attack</button
