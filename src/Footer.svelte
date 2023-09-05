@@ -3,7 +3,7 @@
     Powered by Open Trivia Database<br />
     Designed by Bootstrap 5<br />
     Animated by Animate.css<br />
-    Data handled by localStorage + Firebase
+    Data handled by Firebase
   </p>
 
   <div class="row justify-content-center align-items-center">
